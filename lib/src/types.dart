@@ -1,0 +1,1 @@
+enum LinkPreviewStyle { large, small }
