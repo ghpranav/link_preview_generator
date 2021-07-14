@@ -1,5 +1,5 @@
-import 'package:link_preview_generator/link_preview_generator.dart';
 import 'package:flutter/material.dart';
+import 'package:link_preview_generator/link_preview_generator.dart';
 
 void main() {
   runApp(MyApp());
@@ -8,11 +8,10 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Link Preveiw Generator Demo',
+      title: 'Link Preview Generator Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -29,13 +28,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  // List of links to preview.
   List<String> get urls => const [
         'https://flyer.chat',
         "https://www.espn.in/football/soccer-transfers/story/4163866/transfer-talk-lionel-messi-tells-barcelona-hes-more-likely-to-leave-then-stay",
         "https://speakerdeck.com/themsaid/the-power-of-laravel-queues",
         "https://twitter.com/laravelphp/status/1222535498880692225",
         "https://www.youtube.com/watch?v=W1pNjxmNHNQ",
-        "https://www.google.com",
+        "https://www.instagram.com/p/CQ3WCUOru1T/",
+        "https://www.google.com/"
       ];
 
   @override
@@ -44,13 +45,15 @@ class _MyHomePageState extends State<MyHomePage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         brightness: Brightness.dark,
-        title: Text('Link Preveiw Generator'),
+        title: Text('Link Preview Generator'),
       ),
       body: ListView.builder(
         itemCount: urls.length,
         itemBuilder: (context, index) => Container(
           key: ValueKey(urls[index]),
           margin: const EdgeInsets.all(15),
+          // Generate a preview for each link.
+          // Alternate between a large and small type preview widget.
           child: LinkPreviewGenerator(
             link: urls[index],
             linkPreviewStyle: index % 2 == 0
