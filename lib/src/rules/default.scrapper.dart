@@ -114,6 +114,7 @@ class DefaultScrapper {
   static String? _getDocImage(HtmlDocument doc, String url) {
     try {
       List<ImageElement> imgs = doc.querySelectorAll('img');
+      var src = <String?>[];
       if (imgs.isNotEmpty) {
         imgs = imgs.where((img) {
           // ignore: unnecessary_null_comparison
@@ -144,10 +145,10 @@ class DefaultScrapper {
         if (imgs.isNotEmpty) {
           imgs.forEach((img) {
             if (img.src != null && !img.src!.contains('//')) {
-              img.src = '${Uri.parse(url).origin}/${img.src!}';
+              src.add('${Uri.parse(url).origin}/${img.src!}');
             }
           });
-          return LinkPreviewScrapper.handleUrl(imgs.first.src!, 'image');
+          return LinkPreviewScrapper.handleUrl(src.first!, 'image');
         }
       }
       return null;

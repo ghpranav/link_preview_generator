@@ -116,7 +116,7 @@ class LinkPreviewScrapper {
       final domainName = () {
         final canonicalLink = doc.querySelector('link[rel=canonical]');
         if (canonicalLink != null && canonicalLink.attributes['href'] != null) {
-          return canonicalLink.attributes['href']!;
+          return canonicalLink.attributes['href'];
         }
         final ogUrlMeta = doc.querySelector('meta[property="og:url"]');
         if (ogUrlMeta != null && ogUrlMeta.text!.isNotEmpty) {
