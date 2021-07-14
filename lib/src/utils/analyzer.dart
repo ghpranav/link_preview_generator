@@ -14,7 +14,7 @@ class LinkPreviewAnalyzer {
   }) async {
     // final start = DateTime.now();
 
-    InfoBase? info = getInfoFromCache(url);
+    var info = getInfoFromCache(url);
     if (info != null) return info;
     try {
       info = await LinkPreview.scrape(url);
@@ -22,7 +22,7 @@ class LinkPreviewAnalyzer {
       info.timeout = DateTime.now().add(cacheDuration);
       _map[url] = info;
     } catch (e) {
-      print("Get web error: $url, Error: $e");
+      print('Get web error: $url, Error: $e');
     }
 
     // print("$url cost ${DateTime.now().difference(start).inMilliseconds}");
@@ -33,7 +33,7 @@ class LinkPreviewAnalyzer {
   /// Get web information
   /// return [InfoBase]
   static InfoBase? getInfoFromCache(String? url) {
-    final InfoBase? info = _map[url];
+    final info = _map[url];
     if (info != null && !info.timeout.isAfter(DateTime.now())) {
       _map.remove(url);
       return null;
@@ -43,5 +43,5 @@ class LinkPreviewAnalyzer {
 
   /// Is it an empty string
   static bool isNotEmpty(String? str) =>
-      str != null && str.isNotEmpty && str.trim().length > 0;
+      str != null && str.isNotEmpty && str.trim().isNotEmpty;
 }

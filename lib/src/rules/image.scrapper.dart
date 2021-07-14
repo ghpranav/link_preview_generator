@@ -8,21 +8,21 @@ class ImageScrapper {
       return WebInfo(
         description: url,
         domain: LinkPreviewScrapper.getDomain(doc, url) ?? url,
-        icon: LinkPreviewScrapper.getIcon(doc, url) ?? "",
-        image: "",
-        video: "",
-        title: url.substring(url.lastIndexOf("/") + 1),
+        icon: LinkPreviewScrapper.getIcon(doc, url) ?? '',
+        image: '',
+        video: '',
+        title: url.substring(url.lastIndexOf('/') + 1),
         type: LinkPreviewType.image,
       );
     } catch (e) {
-      print("Image scrapper failure Error: $e");
+      print('Image scrapper failure Error: $e');
       return WebInfo(
         description: url,
         domain: LinkPreviewScrapper.getDomain(doc, url) ?? url,
-        icon: "",
-        image: "",
-        video: "",
-        title: url.substring(url.lastIndexOf("/") + 1),
+        icon: '',
+        image: '',
+        video: '',
+        title: url.substring(url.lastIndexOf('/') + 1),
         type: LinkPreviewType.error,
       );
     }

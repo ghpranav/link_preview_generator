@@ -10,8 +10,8 @@ class TwitterScrapper {
   static WebInfo scrape(HtmlDocument doc, String data, String url) {
     try {
       final scrappedData = json.decode(data);
-      final htmlElement = document.createElement("html");
-      htmlElement.innerHtml = scrappedData["html"];
+      final htmlElement = document.createElement('html');
+      htmlElement.innerHtml = scrappedData['html'];
 
       final baseUrl = LinkPreviewScrapper.getBaseUrl(doc, url);
 
@@ -37,24 +37,24 @@ class TwitterScrapper {
           .firstOrNull;
 
       return WebInfo(
-        description: htmlElement.querySelector('p')?.text ?? "",
+        description: htmlElement.querySelector('p')?.text ?? '',
         domain: LinkPreviewScrapper.getDomain(doc, url) ?? url,
-        icon: LinkPreviewScrapper.getIcon(doc, url) ?? "",
-        image: image ?? "",
-        video: video ?? "",
-        title: scrappedData["author_name"] + " on Twitter",
+        icon: LinkPreviewScrapper.getIcon(doc, url) ?? '',
+        image: image ?? '',
+        video: video ?? '',
+        title: '${scrappedData['author_name']} on Twitter',
         type: LinkPreviewType.twitter,
       );
     } catch (e) {
-      print("Twitter scrapper failure Error: $e");
+      print('Twitter scrapper failure Error: $e');
       return WebInfo(
         description: "It's what's happening / Twitter",
-        domain: "twitter.com",
-        icon: "https://twitter.com/favicon.ico",
+        domain: 'twitter.com',
+        icon: 'https://twitter.com/favicon.ico',
         image:
-            "https://abs.twimg.com/responsive-web/client-web/icon-ios.b1fc7275.png",
-        video: "",
-        title: "Twitter",
+            'https://abs.twimg.com/responsive-web/client-web/icon-ios.b1fc7275.png',
+        video: '',
+        title: 'Twitter',
         type: LinkPreviewType.error,
       );
     }

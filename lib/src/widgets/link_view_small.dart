@@ -19,7 +19,7 @@ class LinkViewSmall extends StatelessWidget {
   final TextStyle? titleTextStyle;
   final String url;
 
-  LinkViewSmall({
+  const LinkViewSmall({
     Key? key,
     required this.url,
     required this.domain,
@@ -71,10 +71,10 @@ class LinkViewSmall extends StatelessWidget {
               showMultiMedia!
                   ? Expanded(
                       flex: 2,
-                      child: imageUri == ""
+                      child: imageUri == ''
                           ? Container(color: bgColor ?? Colors.grey)
                           : Container(
-                              margin: EdgeInsets.only(right: 5),
+                              margin: const EdgeInsets.only(right: 5),
                               decoration: BoxDecoration(
                                 image: DecorationImage(
                                   image: NetworkImage(imageUri),
@@ -89,11 +89,11 @@ class LinkViewSmall extends StatelessWidget {
                               ),
                             ),
                     )
-                  : SizedBox(width: 5),
+                  : const SizedBox(width: 5),
               Expanded(
                 flex: 4,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 3),
+                  padding: const EdgeInsets.symmetric(vertical: 3),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -113,7 +113,7 @@ class LinkViewSmall extends StatelessWidget {
   }
 
   int computeBodyLines(layoutHeight) {
-    int lines = 1;
+    var lines = 1;
     if (layoutHeight > 40) {
       lines += (layoutHeight - 40.0) ~/ 15.0 as int;
     }
@@ -121,7 +121,7 @@ class LinkViewSmall extends StatelessWidget {
   }
 
   double computeTitleFontSize(double width) {
-    double size = width * 0.13;
+    var size = width * 0.13;
     if (size > 15) {
       size = 15;
     }
@@ -143,7 +143,7 @@ class LinkViewSmall extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 6),
               child: Align(
-                alignment: Alignment(-1.0, -1.0),
+                alignment: const Alignment(-1.0, -1.0),
                 child: Text(
                   domain,
                   maxLines: 1,
@@ -155,15 +155,13 @@ class LinkViewSmall extends StatelessWidget {
             ),
             Expanded(
               child: Container(
-                alignment: Alignment(-1.0, -1.0),
+                alignment: const Alignment(-1.0, -1.0),
                 child: Text(
                   description,
                   textAlign: TextAlign.left,
                   style: _bodyTS,
-                  overflow: bodyTextOverflow == null
-                      ? TextOverflow.ellipsis
-                      : bodyTextOverflow,
-                  maxLines: bodyMaxLines == null ? _maxLines : bodyMaxLines,
+                  overflow: bodyTextOverflow ?? TextOverflow.ellipsis,
+                  maxLines: bodyMaxLines ?? _maxLines,
                 ),
               ),
             ),
@@ -179,7 +177,7 @@ class LinkViewSmall extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Container(
-            alignment: Alignment(-1.0, -1.0),
+            alignment: const Alignment(-1.0, -1.0),
             child: Text(
               title,
               style: _titleTS,

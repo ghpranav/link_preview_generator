@@ -20,7 +20,7 @@ import 'package:universal_html/parsing.dart';
 class LinkPreview {
   /// User agent user for making GET request to given URL.
   /// Uses `WhatsApp v2.21.12.21` user agent.
-  static final _userAgent = "WhatsApp/2.21.12.21 A";
+  static const _userAgent = 'WhatsApp/2.21.12.21 A';
 
   /// Scraps the link from the given `url` to get the data for the preview.
   /// Returns the data in the form [WebInfo]
@@ -29,13 +29,13 @@ class LinkPreview {
       final response = await http.get(
         Uri.parse(url),
         headers: {
-          "User-Agent": _userAgent,
+          'User-Agent': _userAgent,
         },
       );
 
-      final String mimeType = response.headers["content-type"] ?? "";
-      final String data = response.body;
-      final HtmlDocument doc = parseHtmlDocument(data);
+      final mimeType = response.headers['content-type'] ?? '';
+      final data = response.body;
+      final doc = parseHtmlDocument(data);
 
       if (LinkPreviewScrapper.isMimeVideo(mimeType)) {
         return VideoScrapper.scrape(doc, url);
@@ -45,7 +45,7 @@ class LinkPreview {
         return ImageScrapper.scrape(doc, url);
       } else if (LinkPreviewScrapper.isUrlInsta(url)) {
         final instagramResponse = await http.get(
-          Uri.parse(url + "?__a=1&max_id=endcursor"),
+          Uri.parse('$url?__a=1&max_id=endcursor'),
         );
         return InstagramScrapper.scrape(doc, instagramResponse.body, url);
       } else if (LinkPreviewScrapper.isUrlYoutube(url)) {
@@ -54,21 +54,21 @@ class LinkPreview {
         return AmazonScrapper.scrape(doc, url);
       } else if (LinkPreviewScrapper.isUrlTwitter(url)) {
         final twitterResponse = await http.get(
-          Uri.parse("https://publish.twitter.com/oembed?url=" + url),
+          Uri.parse('https://publish.twitter.com/oembed?url=$url'),
         );
         return TwitterScrapper.scrape(doc, twitterResponse.body, url);
       } else {
         return DefaultScrapper.scrape(doc, url);
       }
     } catch (e) {
-      print("Default scrapper failure Error: $e");
+      print('Default scrapper failure Error: $e');
       return WebInfo(
-        description: "",
+        description: '',
         domain: url,
-        icon: "",
-        image: "",
-        video: "",
-        title: "",
+        icon: '',
+        image: '',
+        video: '',
+        title: '',
         type: LinkPreviewType.error,
       );
     }
@@ -98,15 +98,14 @@ class LinkPreviewScrapper {
       return itemUrl;
     }
     return UrlCanonicalizer(removeFragment: true)
-        .canonicalize(baseUrl + "/" + itemUrl);
+        .canonicalize('$baseUrl/$itemUrl');
   }
 
   static String? getAttrOfDocElement(
       HtmlDocument doc, String query, String attr) {
-    String? attribute =
-        doc.querySelectorAll(query).firstOrNull?.getAttribute(attr);
+    var attribute = doc.querySelectorAll(query).firstOrNull?.getAttribute(attr);
 
-    if (attribute != null && attribute.length > 0) return attribute;
+    if (attribute != null && attribute.isNotEmpty) return attribute;
   }
 
   static String getBaseUrl(HtmlDocument doc, String url) =>
@@ -114,36 +113,38 @@ class LinkPreviewScrapper {
 
   static String? getDomain(HtmlDocument doc, String url) {
     try {
-      final String? domainName = () {
-        final canonicalLink = doc.querySelector("link[rel=canonical]");
-        if (canonicalLink != null && canonicalLink.attributes["href"] != null)
-          return canonicalLink.attributes["href"]!;
+      final domainName = () {
+        final canonicalLink = doc.querySelector('link[rel=canonical]');
+        if (canonicalLink != null && canonicalLink.attributes['href'] != null) {
+          return canonicalLink.attributes['href']!;
+        }
         final ogUrlMeta = doc.querySelector('meta[property="og:url"]');
-        if (ogUrlMeta != null && ogUrlMeta.text!.length > 0)
+        if (ogUrlMeta != null && ogUrlMeta.text!.isNotEmpty) {
           return ogUrlMeta.text;
+        }
         return null;
       }();
 
       return domainName != null
-          ? Uri.parse(domainName).host.replaceFirst("www.", "")
-          : Uri.parse(url).host.replaceFirst("www.", "");
+          ? Uri.parse(domainName).host.replaceFirst('www.', '')
+          : Uri.parse(url).host.replaceFirst('www.', '');
     } catch (e) {
-      print("Domain resolution failure Error:$e");
+      print('Domain resolution failure Error:$e');
       return null;
     }
   }
 
   static String? getIcon(HtmlDocument doc, String url) {
-    final List<Element>? meta = doc.querySelectorAll("link");
-    String? icon = "";
+    final List<Element>? meta = doc.querySelectorAll('link');
+    String? icon = '';
     Element? metaIcon;
-    if (meta != null && meta.length > 0) {
+    if (meta != null && meta.isNotEmpty) {
       // get icon first
       metaIcon = meta.firstWhereOrNull((e) {
-        final rel = (e.attributes["rel"] ?? "").toLowerCase();
-        if (rel == "icon") {
-          icon = e.attributes["href"];
-          if (icon != null && !icon!.toLowerCase().contains(".svg")) {
+        final rel = (e.attributes['rel'] ?? '').toLowerCase();
+        if (rel == 'icon') {
+          icon = e.attributes['href'];
+          if (icon != null && !icon!.toLowerCase().contains('.svg')) {
             return true;
           }
         }
@@ -151,10 +152,10 @@ class LinkPreviewScrapper {
       });
 
       metaIcon ??= meta.firstWhereOrNull((e) {
-        final rel = (e.attributes["rel"] ?? "").toLowerCase();
-        if (rel == "shortcut icon") {
-          icon = e.attributes["href"];
-          if (icon != null && !icon!.toLowerCase().contains(".svg")) {
+        final rel = (e.attributes['rel'] ?? '').toLowerCase();
+        if (rel == 'shortcut icon') {
+          icon = e.attributes['href'];
+          if (icon != null && !icon!.toLowerCase().contains('.svg')) {
             return true;
           }
         }
@@ -162,61 +163,63 @@ class LinkPreviewScrapper {
       });
     }
     if (metaIcon != null) {
-      icon = metaIcon.attributes["href"];
+      icon = metaIcon.attributes['href'];
       return LinkPreviewScrapper.handleUrl(url, icon);
     }
-    return "${Uri.parse(url).origin}/favicon.ico";
+    return '${Uri.parse(url).origin}/favicon.ico';
   }
 
   static String? getTitle(HtmlDocument doc) {
     try {
       final ogTitle = doc.querySelector('meta[property="og:title"]');
       if (ogTitle != null &&
-          ogTitle.attributes["content"] != null &&
-          ogTitle.attributes["content"]!.length > 0)
-        return ogTitle.attributes["content"];
+          ogTitle.attributes['content'] != null &&
+          ogTitle.attributes['content']!.isNotEmpty) {
+        return ogTitle.attributes['content'];
+      }
       final twitterTitle = doc.querySelector('meta[name="twitter:title"]');
       if (twitterTitle != null &&
-          twitterTitle.attributes["content"] != null &&
-          twitterTitle.attributes["content"]!.length > 0)
-        return twitterTitle.attributes["content"];
+          twitterTitle.attributes['content'] != null &&
+          twitterTitle.attributes['content']!.isNotEmpty) {
+        return twitterTitle.attributes['content'];
+      }
       String? docTitle = doc.title;
       // ignore: unnecessary_null_comparison
-      if (docTitle != null && docTitle.length > 0) return docTitle;
-      final h1El = doc.querySelector("h1");
-      final h1 = h1El != null ? h1El.innerHtml ?? null : null;
-      if (h1 != null && h1.length > 0) return h1;
-      final h2El = doc.querySelector("h2");
-      final h2 = h2El != null ? h2El.innerHtml ?? null : null;
-      if (h2 != null && h2.length > 0) return h2;
+      if (docTitle != null && docTitle.isNotEmpty) return docTitle;
+      final h1El = doc.querySelector('h1');
+      final h1 = h1El?.innerHtml;
+      if (h1 != null && h1.isNotEmpty) return h1;
+      final h2El = doc.querySelector('h2');
+      final h2 = h2El?.innerHtml;
+      if (h2 != null && h2.isNotEmpty) return h2;
       return null;
     } catch (e) {
-      print("Title resolution failure Error:$e");
+      print('Title resolution failure Error:$e');
       return null;
     }
   }
 
   static String? handleUrl(String url, String? source) {
-    Uri uri = Uri.parse(url);
-    if (LinkPreviewAnalyzer.isNotEmpty(source) && !source!.startsWith("http")) {
-      if (source.startsWith("//")) {
-        source = "${uri.scheme}:$source";
+    var uri = Uri.parse(url);
+    if (LinkPreviewAnalyzer.isNotEmpty(source) && !source!.startsWith('http')) {
+      if (source.startsWith('//')) {
+        source = '${uri.scheme}:$source';
       } else {
-        if (source.startsWith("/")) {
-          source = "${uri.origin}$source";
+        if (source.startsWith('/')) {
+          source = '${uri.origin}$source';
         } else {
-          source = "${uri.origin}/$source";
+          source = '${uri.origin}/$source';
         }
       }
     }
     return source;
   }
 
-  static bool isMimeAudio(String mimeType) => mimeType.startsWith("audio/");
+  static bool isMimeAudio(String mimeType) => mimeType.startsWith('audio/');
 
-  static bool isMimeImage(String mimeType) => mimeType.startsWith("image/");
+  static bool isMimeImage(String mimeType) => mimeType.startsWith('image/');
 
-  static bool isMimeVideo(String mimeType) => mimeType.startsWith("video/");
+  static bool isMimeVideo(String mimeType) => mimeType.startsWith('video/');
 
   static bool isUrlAmazon(String url) => _amazonUrl.hasMatch(url);
 

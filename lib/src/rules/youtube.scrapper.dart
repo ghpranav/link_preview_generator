@@ -3,7 +3,7 @@ import 'package:link_preview_generator/src/utils/scrapper.dart';
 import 'package:universal_html/html.dart';
 
 class YouTubeScrapper {
-  static getYoutTubeVideoId(String url) {
+  static String? getYoutTubeVideoId(String url) {
     final youtubeRegex = RegExp(
         r'.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*');
     if (youtubeRegex.hasMatch(url)) {
@@ -15,9 +15,9 @@ class YouTubeScrapper {
     try {
       final id = getYoutTubeVideoId(url);
       var title = RegExp(r'"title":"(.+?)"')
-          .firstMatch(doc.querySelector("html")?.innerHtml ?? "")
+          .firstMatch(doc.querySelector('html')?.innerHtml ?? '')
           ?.group(0)
-          ?.split(":")[1]
+          ?.split(':')[1]
           .trim();
       title = title != null
           ? title.substring(1, title.length - 1)
@@ -30,23 +30,23 @@ class YouTubeScrapper {
                 doc, 'meta[name="twitter:description"]', 'content') ??
             url,
         domain: LinkPreviewScrapper.getDomain(doc, url) ?? url,
-        icon: LinkPreviewScrapper.getIcon(doc, url) ?? "",
-        image: id != null ? "https://img.youtube.com/vi/$id/0.jpg" : "",
-        video: "",
-        title: title ?? "",
+        icon: LinkPreviewScrapper.getIcon(doc, url) ?? '',
+        image: id != null ? 'https://img.youtube.com/vi/$id/0.jpg' : '',
+        video: '',
+        title: title ?? '',
         type: LinkPreviewType.youtube,
       );
     } catch (e) {
-      print("Youtube scrapper failure Error: $e");
+      print('Youtube scrapper failure Error: $e');
       return WebInfo(
         description:
-            "Enjoy the videos and music that you love, upload original content and share it all with friends, family and the world on YouTube.",
-        domain: "youtube.com",
+            'Enjoy the videos and music that you love, upload original content and share it all with friends, family and the world on YouTube.',
+        domain: 'youtube.com',
         icon:
-            "https://www.youtube.com/s/desktop/ff5301c8/img/favicon_96x96.png",
-        image: "",
-        video: "",
-        title: "YouTube",
+            'https://www.youtube.com/s/desktop/ff5301c8/img/favicon_96x96.png',
+        image: '',
+        video: '',
+        title: 'YouTube',
         type: LinkPreviewType.error,
       );
     }

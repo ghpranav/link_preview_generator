@@ -7,9 +7,9 @@ import 'package:universal_html/html.dart';
 class DefaultScrapper {
   static WebInfo scrape(HtmlDocument doc, String url) {
     try {
-      String baseUrl = LinkPreviewScrapper.getBaseUrl(doc, url);
+      var baseUrl = LinkPreviewScrapper.getBaseUrl(doc, url);
 
-      String? image = [
+      var image = [
         LinkPreviewScrapper.getAttrOfDocElement(
             doc, 'meta[property="og:logo"]', 'content'),
         LinkPreviewScrapper.getAttrOfDocElement(
@@ -39,7 +39,7 @@ class DefaultScrapper {
           .map((i) => LinkPreviewScrapper.fixRelativeUrls(baseUrl, i!))
           .firstOrNull;
 
-      String? icon = [
+      var icon = [
         LinkPreviewScrapper.getAttrOfDocElement(
             doc, 'meta[property="og:logo"]', 'content'),
         LinkPreviewScrapper.getAttrOfDocElement(
@@ -52,23 +52,23 @@ class DefaultScrapper {
           .firstOrNull;
 
       return WebInfo(
-        description: _getDescription(doc) ?? "",
+        description: _getDescription(doc) ?? '',
         domain: LinkPreviewScrapper.getDomain(doc, url) ?? url,
-        icon: LinkPreviewScrapper.getIcon(doc, url) ?? icon ?? "",
-        image: image ?? _getDocImage(doc, url) ?? "",
-        video: "",
-        title: LinkPreviewScrapper.getTitle(doc) ?? "",
+        icon: LinkPreviewScrapper.getIcon(doc, url) ?? icon ?? '',
+        image: image ?? _getDocImage(doc, url) ?? '',
+        video: '',
+        title: LinkPreviewScrapper.getTitle(doc) ?? '',
         type: LinkPreviewType.def,
       );
     } catch (e) {
-      print("Default scrapper failure Error: $e");
+      print('Default scrapper failure Error: $e');
       return WebInfo(
-        description: "",
+        description: '',
         domain: url,
-        icon: "",
-        image: "",
-        video: "",
-        title: "",
+        icon: '',
+        image: '',
+        video: '',
+        title: '',
         type: LinkPreviewType.error,
       );
     }
@@ -76,23 +76,26 @@ class DefaultScrapper {
 
   static String? _getDescription(HtmlDocument doc) {
     try {
-      final ogDescription = doc.querySelector("meta[name=description]");
+      final ogDescription = doc.querySelector('meta[name=description]');
       if (ogDescription != null &&
-          ogDescription.attributes["content"] != null &&
-          ogDescription.attributes["content"]!.length > 0)
-        return ogDescription.attributes["content"];
+          ogDescription.attributes['content'] != null &&
+          ogDescription.attributes['content']!.isNotEmpty) {
+        return ogDescription.attributes['content'];
+      }
       final twitterDescription =
           doc.querySelector('meta[name="twitter:description"]');
       if (twitterDescription != null &&
-          twitterDescription.attributes["content"] != null &&
-          twitterDescription.attributes["content"]!.length > 0)
-        return twitterDescription.attributes["content"];
+          twitterDescription.attributes['content'] != null &&
+          twitterDescription.attributes['content']!.isNotEmpty) {
+        return twitterDescription.attributes['content'];
+      }
       final metaDescription = doc.querySelector('meta[name="description"]');
       if (metaDescription != null &&
-          metaDescription.attributes["content"] != null &&
-          metaDescription.attributes["content"]!.length > 0)
-        return metaDescription.attributes["content"];
-      final paragraphs = doc.querySelectorAll("p");
+          metaDescription.attributes['content'] != null &&
+          metaDescription.attributes['content']!.isNotEmpty) {
+        return metaDescription.attributes['content'];
+      }
+      final paragraphs = doc.querySelectorAll('p');
       String? fstVisibleParagraph;
       for (var i = 0; i < paragraphs.length; i++) {
         // if object is visible
@@ -103,7 +106,7 @@ class DefaultScrapper {
       }
       return fstVisibleParagraph;
     } catch (e) {
-      print("Get default description resolution failure Error: $e");
+      print('Get default description resolution failure Error: $e');
       return null;
     }
   }
@@ -111,7 +114,7 @@ class DefaultScrapper {
   static String? _getDocImage(HtmlDocument doc, String url) {
     try {
       List<ImageElement> imgs = doc.querySelectorAll('img');
-      if (imgs.length > 0) {
+      if (imgs.isNotEmpty) {
         imgs = imgs.where((img) {
           // ignore: unnecessary_null_comparison
           if (img == null ||
@@ -119,7 +122,7 @@ class DefaultScrapper {
               img.naturalHeight == null ||
               // ignore: unnecessary_null_comparison
               img.naturalWidth == null) return false;
-          bool addImg = true;
+          var addImg = true;
           // ignore: unnecessary_non_null_assertion
           if (img.naturalWidth! > img.naturalHeight!) {
             // ignore: unnecessary_non_null_assertion
@@ -138,17 +141,18 @@ class DefaultScrapper {
           }
           return addImg;
         }).toList();
-        if (imgs.length > 0) {
+        if (imgs.isNotEmpty) {
           imgs.forEach((img) {
-            if (img.src != null && img.src!.indexOf("//") == -1)
-              img.src = Uri.parse(url).origin + '/' + img.src!;
+            if (img.src != null && !img.src!.contains('//')) {
+              img.src = '${Uri.parse(url).origin}/${img.src!}';
+            }
           });
-          return LinkPreviewScrapper.handleUrl(imgs.first.src!, "image");
+          return LinkPreviewScrapper.handleUrl(imgs.first.src!, 'image');
         }
       }
       return null;
     } catch (e) {
-      print("Get default image resolution failure Error: $e");
+      print('Get default image resolution failure Error: $e');
       return null;
     }
   }

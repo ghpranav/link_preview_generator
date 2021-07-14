@@ -56,8 +56,6 @@ class LinkPreviewGenerator extends StatefulWidget {
   /// Defaults to plain container with given background colour.
   final Widget? errorWidget;
 
-  final Key? key;
-
   /// Web address (URL that needs to be parsed/scrapped).
   final String link;
 
@@ -83,7 +81,7 @@ class LinkPreviewGenerator extends StatefulWidget {
 
   /// Creates [LinkPreviewGenerator]
   const LinkPreviewGenerator({
-    this.key,
+    Key? key,
     required this.link,
     this.cacheDuration = const Duration(days: 30),
     this.titleStyle,
@@ -114,13 +112,13 @@ class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
 
   @override
   Widget build(BuildContext context) {
-    final WebInfo? info = _info;
-    double _height = (widget.linkPreviewStyle == LinkPreviewStyle.small ||
+    final info = _info;
+    var _height = (widget.linkPreviewStyle == LinkPreviewStyle.small ||
             !widget.showGraphic)
         ? ((MediaQuery.of(context).size.height) * 0.15)
         : ((MediaQuery.of(context).size.height) * 0.25);
 
-    if (_loading)
+    if (_loading) {
       return widget.placeholderWidget ??
           Container(
             height: _height,
@@ -130,17 +128,18 @@ class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
               color: const Color.fromRGBO(248, 248, 248, 1.0),
             ),
             alignment: Alignment.center,
-            child: Text('Fetching data...'),
+            child: const Text('Fetching data...'),
           );
+    }
 
     if (_info != null) {
       if (_info!.type == LinkPreviewType.image) {
-        String img = _info!.image;
+        var img = _info!.image;
         return _buildLinkContainer(
           _height,
           title: _errorTitle,
           desc: _errorBody,
-          image: img.trim() == "" ? _errorImage : img,
+          image: img.trim() == '' ? _errorImage : img,
         );
       }
     }
@@ -151,7 +150,7 @@ class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
         : _buildLinkContainer(
             _height,
             domain:
-                LinkPreviewAnalyzer.isNotEmpty(info!.domain) ? info.domain : "",
+                LinkPreviewAnalyzer.isNotEmpty(info!.domain) ? info.domain : '',
             title: LinkPreviewAnalyzer.isNotEmpty(info.title)
                 ? info.title
                 : _errorTitle,
@@ -172,9 +171,9 @@ class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
     super.initState();
 
     _errorImage = widget.errorImage ??
-        "https://github.com/ghpranav/link_preview_generator/blob/main/assets/giphy.gif?raw=true";
-    _errorTitle = widget.errorTitle ?? "Something went wrong!";
-    _errorBody = widget.errorBody ?? "Oops! Unable to parse the url.";
+        'https://github.com/ghpranav/link_preview_generator/blob/main/assets/giphy.gif?raw=true';
+    _errorTitle = widget.errorTitle ?? 'Something went wrong!';
+    _errorBody = widget.errorBody ?? 'Oops! Unable to parse the url.';
     _url = widget.link.trim();
 
     _info = LinkPreviewAnalyzer.getInfoFromCache(_url) as WebInfo?;
@@ -204,7 +203,7 @@ class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
                     spreadRadius: 1,
                     blurRadius: 5,
                     color: Colors.grey.withOpacity(0.5),
-                    offset: Offset(0, 3),
+                    offset: const Offset(0, 3),
                   )
                 ],
       ),
@@ -248,43 +247,45 @@ class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
   }
 
   Widget _buildPlaceHolder(Color color, double defaultHeight) {
-    return Container(
+    return SizedBox(
       height: defaultHeight,
-      child: LayoutBuilder(builder: (context, constraints) {
-        var layoutWidth = constraints.biggest.width;
-        var layoutHeight = constraints.biggest.height;
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          var layoutWidth = constraints.biggest.width;
+          var layoutHeight = constraints.biggest.height;
 
-        return Container(
-          color: color,
-          width: layoutWidth,
-          height: layoutHeight,
-        );
-      }),
+          return Container(
+            color: color,
+            width: layoutWidth,
+            height: layoutHeight,
+          );
+        },
+      ),
     );
   }
 
   Future<void> _getInfo() async {
-    if (_url!.startsWith("http") || _url!.startsWith("https")) {
-      _info = (await LinkPreviewAnalyzer.getInfo(_url!,
-          cacheDuration: widget.cacheDuration, multimedia: true)) as WebInfo?;
-      if (this.mounted) {
+    if (_url!.startsWith('http') || _url!.startsWith('https')) {
+      _info = await LinkPreviewAnalyzer.getInfo(_url!,
+          cacheDuration: widget.cacheDuration, multimedia: true) as WebInfo?;
+      if (mounted) {
         setState(() {
           _loading = false;
         });
       }
     } else {
-      print("Error: $_url is not starting with either http or https.");
+      print('Error: $_url is not starting with either http or https.');
     }
   }
 
-  void _launchURL(url) async {
+  void _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
       try {
         await launch(url);
       } catch (err) {
-        throw 'Could not launch $url. Error: $err';
+        throw Exception('Could not launch $url. Error: $err');
       }
     }
   }
