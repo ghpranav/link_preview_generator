@@ -1,87 +1,91 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:link_preview_generator/src/types.dart';
-import 'package:link_preview_generator/src/utils.dart';
-import 'package:link_preview_generator/src/widgets/link_view_horizontal.dart';
-import 'package:link_preview_generator/src/widgets/link_view_vertical.dart';
+import 'package:link_preview_generator/src/models/types.dart';
+import 'package:link_preview_generator/src/utils/analyzer.dart';
+import 'package:link_preview_generator/src/widgets/link_view_large.dart';
+import 'package:link_preview_generator/src/widgets/link_view_small.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// A widget to convert your links into beautiful previews
+/// A widget to convert your links into beautiful previews.
 class LinkPreviewGenerator extends StatefulWidget {
-  final Key? key;
-
-  /// Link Preview display style. One among `large, small`
-  /// By default it is `large`
-  final LinkPreviewStyle linkPreviewStyle;
-
-  /// Web address (Url that need to be parsed)
-  final String link;
-
-  /// Customize background colour
-  /// Deaults to `Color.fromRGBO(248, 248, 248, 1.0)`
+  /// Customize the background colour
+  /// Deaults to `Color.fromRGBO(248, 248, 248, 1.0)`.
   final Color? backgroundColor;
 
-  /// Widget that need to be shown when
-  /// package is trying to fetch metadata
-  /// If not given anything then default one will be shown
-  final Widget? placeholderWidget;
+  /// Give the limit to body text (Description).
+  /// Deaults to `3`.
+  final int bodyMaxLines;
 
-  /// Widget that need to be shown if something goes wrong
-  /// Defaults to plain container with given background colour
-  /// If the issue is know then we will show customized UI
-  /// Other options of error params are used
-  final Widget? errorWidget;
+  /// Customize `body` [TextStyle].
+  final TextStyle? bodyStyle;
+
+  /// Give the overflow type for body text (Description).
+  /// Deaults to `TextOverflow.ellipsis`.
+  final TextOverflow bodyTextOverflow;
+
+  /// BorderRadius for the card.
+  /// Deafults to `12`.
+  final double? borderRadius;
+
+  /// Box shadow for the card.
+  ///  Deafults to `[BoxShadow(
+  ///               spreadRadius: 1,
+  ///               blurRadius: 5,
+  ///               color: Colors.grey.withOpacity(0.5),
+  ///               offset: Offset(0, 3),)]`.
+  final List<BoxShadow>? boxShadow;
+
+  /// Cache result time, default cache `30 days`.
+  final Duration cacheDuration;
+
+  /// Body that need to be shown if something goes wrong.
+  /// Deaults to `Oops! Unable to parse the url.`
+  final String? errorBody;
+
+  /// Image URL that will be shown if something goes wrong
+  /// & when multimedia enabled & no meta data is available.
+  /// Deaults to `A semi-soccer ball image that looks like crying`.
+  final String? errorImage;
 
   /// Title that need to be shown if something goes wrong
   /// Deaults to `Something went wrong!`
   final String? errorTitle;
 
-  /// Body that need to be shown if something goes wrong
-  /// Deaults to `Oops! Unable to parse the url. We have sent feedback to our developers & we will try to fix this in our next release. Thanks!`
-  final String? errorBody;
+  /// Widget that needs to be shown if something goes wrong.
+  /// Defaults to plain container with given background colour.
+  final Widget? errorWidget;
 
-  /// Image that will be shown if something goes wrong
-  /// & when multimedia enabled & no meta data is available
-  /// Deaults to `A semi-soccer ball image that looks like crying`
-  final String? errorImage;
+  final Key? key;
 
-  /// Give the overflow type for body text (Description)
-  /// Deaults to `TextOverflow.ellipsis`
-  final TextOverflow bodyTextOverflow;
+  /// Web address (URL that needs to be parsed/scrapped).
+  final String link;
 
-  /// Give the limit to body text (Description)
-  /// Deaults to `3`
-  final int bodyMaxLines;
+  /// Link Preview display style. One among `large`, `small`.
+  /// Defaults to `large`.
+  final LinkPreviewStyle linkPreviewStyle;
 
-  /// Cache result time, default cache `30 days`
-  /// Works only for IOS & not for android
-  final Duration cache;
+  /// Widget that needs to be shown when
+  /// package is trying to fetch metadata.
+  /// If not given anything then default widget will be shown.
+  final Widget? placeholderWidget;
 
-  /// Customize body `TextStyle`
-  final TextStyle? titleStyle;
-
-  /// Customize body `TextStyle`
-  final TextStyle? bodyStyle;
-
-  /// Show or Hide image if available defaults to `true`
-  final bool showGraphic;
-
-  /// BorderRadius for the card. Deafults to `12`
-  final double? borderRadius;
-
-  /// To remove the card elevation set it to `true`
-  /// Default value is `false`
+  /// To remove the card elevation set it to `true`.
+  /// Defaults to `false`.
   final bool removeElevation;
 
-  /// Box shadow for the card. Deafults to `[BoxShadow(blurRadius: 3, color: Colors.grey)]`
-  final List<BoxShadow>? boxShadow;
+  /// Show or Hide image, if available.
+  /// Defaults to `true`.
+  final bool showGraphic;
+
+  /// Customize `title` [TextStyle].
+  final TextStyle? titleStyle;
 
   /// Creates [LinkPreviewGenerator]
   const LinkPreviewGenerator({
     this.key,
     required this.link,
-    this.cache = const Duration(days: 30),
+    this.cacheDuration = const Duration(days: 30),
     this.titleStyle,
     this.bodyStyle,
     this.linkPreviewStyle = LinkPreviewStyle.large,
@@ -104,13 +108,13 @@ class LinkPreviewGenerator extends StatefulWidget {
 }
 
 class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
-  InfoBase? _info;
-  String? _errorImage, _errorTitle, _errorBody, _url;
+  WebInfo? _info;
   bool _loading = false;
+  String? _errorImage, _errorTitle, _errorBody, _url;
 
   @override
   Widget build(BuildContext context) {
-    final WebInfo? info = _info as WebInfo?;
+    final WebInfo? info = _info;
     double _height = (widget.linkPreviewStyle == LinkPreviewStyle.small ||
             !widget.showGraphic)
         ? ((MediaQuery.of(context).size.height) * 0.15)
@@ -123,20 +127,22 @@ class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(widget.borderRadius ?? 12),
-              color: Colors.grey[200],
+              color: const Color.fromRGBO(248, 248, 248, 1.0),
             ),
             alignment: Alignment.center,
             child: Text('Fetching data...'),
           );
 
-    if (_info is WebImageInfo) {
-      String img = (_info as WebImageInfo).image!;
-      return _buildLinkContainer(
-        _height,
-        title: _errorTitle,
-        desc: _errorBody,
-        image: img.trim() == "" ? _errorImage : img,
-      );
+    if (_info != null) {
+      if (_info!.type == LinkPreviewType.image) {
+        String img = _info!.image;
+        return _buildLinkContainer(
+          _height,
+          title: _errorTitle,
+          desc: _errorBody,
+          image: img.trim() == "" ? _errorImage : img,
+        );
+      }
     }
 
     return _info == null
@@ -145,36 +151,37 @@ class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
         : _buildLinkContainer(
             _height,
             domain:
-                LinkPreviewUtils.isNotEmpty(info!.domain) ? info.domain : "",
-            title: LinkPreviewUtils.isNotEmpty(info.title)
+                LinkPreviewAnalyzer.isNotEmpty(info!.domain) ? info.domain : "",
+            title: LinkPreviewAnalyzer.isNotEmpty(info.title)
                 ? info.title
                 : _errorTitle,
-            desc: LinkPreviewUtils.isNotEmpty(info.description)
+            desc: LinkPreviewAnalyzer.isNotEmpty(info.description)
                 ? info.description
                 : _errorBody,
-            image: LinkPreviewUtils.isNotEmpty(info.image)
+            image: LinkPreviewAnalyzer.isNotEmpty(info.image)
                 ? info.image
-                : LinkPreviewUtils.isNotEmpty(info.icon)
+                : LinkPreviewAnalyzer.isNotEmpty(info.icon)
                     ? info.icon
                     : _errorImage,
-            isIcon: LinkPreviewUtils.isNotEmpty(info.image) ? false : true,
+            isIcon: LinkPreviewAnalyzer.isNotEmpty(info.image) ? false : true,
           );
   }
 
   @override
   void initState() {
+    super.initState();
+
     _errorImage = widget.errorImage ??
-        "https://github.com/ghpranav/link_preview_generator/blob/main/lib/assets/giphy.gif?raw=true";
+        "https://github.com/ghpranav/link_preview_generator/blob/main/assets/giphy.gif?raw=true";
     _errorTitle = widget.errorTitle ?? "Something went wrong!";
-    _errorBody = widget.errorBody ??
-        "Oops! Unable to parse the url. We have sent feedback to our developers & we will try to fix this in our next release. Thanks!";
+    _errorBody = widget.errorBody ?? "Oops! Unable to parse the url.";
     _url = widget.link.trim();
-    _info = LinkPreviewUtils.getInfoFromCache(_url);
+
+    _info = LinkPreviewAnalyzer.getInfoFromCache(_url) as WebInfo?;
     if (_info == null) {
       _loading = true;
       _getInfo();
     }
-    super.initState();
   }
 
   Widget _buildLinkContainer(
@@ -192,11 +199,18 @@ class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
         boxShadow: widget.removeElevation
             ? []
             : widget.boxShadow ??
-                [BoxShadow(blurRadius: 3, color: Colors.grey)],
+                [
+                  BoxShadow(
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                    color: Colors.grey.withOpacity(0.5),
+                    offset: Offset(0, 3),
+                  )
+                ],
       ),
       height: _height,
       child: (widget.linkPreviewStyle == LinkPreviewStyle.small)
-          ? LinkViewHorizontal(
+          ? LinkViewSmall(
               key: widget.key ?? Key(widget.link.toString()),
               url: widget.link,
               domain: domain!,
@@ -213,7 +227,7 @@ class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
               bgColor: widget.backgroundColor,
               radius: widget.borderRadius ?? 12,
             )
-          : LinkViewVertical(
+          : LinkViewLarge(
               key: widget.key ?? Key(widget.link.toString()),
               url: widget.link,
               domain: domain!,
@@ -251,15 +265,15 @@ class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
 
   Future<void> _getInfo() async {
     if (_url!.startsWith("http") || _url!.startsWith("https")) {
-      _info = await LinkPreviewUtils.getInfo(_url!,
-          cache: widget.cache, multimedia: true);
+      _info = (await LinkPreviewAnalyzer.getInfo(_url!,
+          cacheDuration: widget.cacheDuration, multimedia: true)) as WebInfo?;
       if (this.mounted) {
         setState(() {
           _loading = false;
         });
       }
     } else {
-      print("$_url is not starting with either http or https");
+      print("Error: $_url is not starting with either http or https.");
     }
   }
 

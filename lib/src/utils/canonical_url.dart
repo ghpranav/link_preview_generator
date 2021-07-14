@@ -9,12 +9,13 @@ bool _matchesPort(String scheme, int port) {
 /// The UrlCanonicalizer is used for the process of converting an URL into a
 /// canonical (normalized) form.
 class UrlCanonicalizer {
+  final List<String>? blacklist;
+
+  final List<String>? order;
+  final bool removeFragment;
   final bool sort;
   final bool sortValues;
-  final List<String>? order;
   final List<String>? whitelist;
-  final List<String>? blacklist;
-  final bool removeFragment;
 
   UrlCanonicalizer({
     this.sort = true,
@@ -25,6 +26,7 @@ class UrlCanonicalizer {
     this.blacklist,
   });
 
+  /// Converts a URL into a canonical (normalized) form.
   T canonicalize<T>(T url, {T? context}) {
     final uri = url is String ? Uri.parse(url) : url as Uri;
     final contextUri = context != null

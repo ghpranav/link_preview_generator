@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 
-class LinkViewHorizontal extends StatelessWidget {
-  final String url;
-  final String domain;
-  final String title;
-  final String description;
-  final String imageUri;
+/// Small type LinkPreviewGenerator widget
+class LinkViewSmall extends StatelessWidget {
   final Function(String) onTap;
-  final TextStyle? titleTextStyle;
-  final TextStyle? bodyTextStyle;
-  final TextStyle? domainTextStyle;
-  final bool? showMultiMedia;
-  final TextOverflow? bodyTextOverflow;
+
+  final Color? bgColor;
   final int? bodyMaxLines;
+  final TextOverflow? bodyTextOverflow;
+  final TextStyle? bodyTextStyle;
+  final String description;
+  final String domain;
+  final TextStyle? domainTextStyle;
+  final String imageUri;
   final bool isIcon;
   final double? radius;
-  final Color? bgColor;
+  final bool? showMultiMedia;
+  final String title;
+  final TextStyle? titleTextStyle;
+  final String url;
 
-  LinkViewHorizontal({
+  LinkViewSmall({
     Key? key,
     required this.url,
     required this.domain,
@@ -138,6 +140,19 @@ class LinkViewHorizontal extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(5, 3, 5, 0),
         child: Column(
           children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: Align(
+                alignment: Alignment(-1.0, -1.0),
+                child: Text(
+                  domain,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.left,
+                  style: _domainTS,
+                ),
+              ),
+            ),
             Expanded(
               child: Container(
                 alignment: Alignment(-1.0, -1.0),
@@ -149,19 +164,6 @@ class LinkViewHorizontal extends StatelessWidget {
                       ? TextOverflow.ellipsis
                       : bodyTextOverflow,
                   maxLines: bodyMaxLines == null ? _maxLines : bodyMaxLines,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 6),
-              child: Align(
-                alignment: Alignment(-1.0, -1.0),
-                child: Text(
-                  domain,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.left,
-                  style: _domainTS,
                 ),
               ),
             ),

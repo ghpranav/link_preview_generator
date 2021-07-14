@@ -13,6 +13,7 @@ dependencies:
     sdk: flutter
   collection: ^1.15.0
   http: ^0.13.3
+  path: ^1.8.0
   universal_html: ^2.0.8
   url_launcher: ^6.0.9
 
