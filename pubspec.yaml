@@ -1,5 +1,5 @@
 name: link_preview_generator
-description: A new Flutter package project.
+description: A cross-platform flutter package to convert your links into rich beautiful previews.
 version: 1.0.0
 homepage: https://github.com/ghpranav/
 repository: https://github.com/ghpranav/link_preview_generator
@@ -26,7 +26,6 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter.
 flutter: null
-
 # To add assets to your package, add an assets section, like this:
 # assets:
 #   - images/a_dot_burr.jpeg
