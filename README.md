@@ -6,10 +6,19 @@
 [![License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 [![Donate](https://img.shields.io/badge/Donate-UPI-green.svg)](https://upayi.me/bedrepranav@okhdfcbank)
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/ghpranav/link_preview_generator/main/assets/header.png" width="480">
+</p>
+
 A cross-platform flutter package to convert your links into rich beautiful previews. <br>
 This package is inspired from [Any Link Preview](https://pub.dartlang.org/packages/any_link_preview) package, but the entire parsing & scrapping logic has been re-written to be more robust & to support more links.
 
 ## Usage
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/ghpranav/link_preview_generator/main/assets/demo-1.png" height="480">
+<img src="https://raw.githubusercontent.com/ghpranav/link_preview_generator/main/assets/demo-2.png" height="480">
+</p>
 
 ### Widget Example
 
