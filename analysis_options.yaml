@@ -26,6 +26,7 @@ linter:
     test_types_in_equals: true
     unawaited_futures: true
     unnecessary_parenthesis: true
+    unnecessary_raw_strings: true
     unnecessary_statements: true
     unsafe_html: true
     use_raw_strings: true

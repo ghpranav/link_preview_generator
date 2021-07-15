@@ -14,7 +14,7 @@ class YouTubeScrapper {
   static WebInfo scrape(HtmlDocument doc, String url) {
     try {
       final id = getYoutTubeVideoId(url);
-      var title = RegExp(r'"title":"(.+?)"')
+      var title = RegExp('"title":"(.+?)"')
           .firstMatch(doc.querySelector('html')?.innerHtml ?? '')
           ?.group(0)
           ?.split(':')[1]
