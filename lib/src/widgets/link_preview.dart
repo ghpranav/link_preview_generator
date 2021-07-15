@@ -9,7 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 /// A widget to convert your links into beautiful previews.
 class LinkPreviewGenerator extends StatefulWidget {
-  /// Customize the background colour
+  /// Customize the background colour.
   /// Deaults to `Color.fromRGBO(248, 248, 248, 1.0)`.
   final Color backgroundColor;
 
@@ -25,7 +25,7 @@ class LinkPreviewGenerator extends StatefulWidget {
   final TextOverflow bodyTextOverflow;
 
   /// BorderRadius for the card.
-  /// Deafults to `12`.
+  /// Deafults to `12.0`.
   final double borderRadius;
 
   /// Box shadow for the card.
@@ -36,24 +36,24 @@ class LinkPreviewGenerator extends StatefulWidget {
   ///               offset: Offset(0, 3),)]`.
   final List<BoxShadow>? boxShadow;
 
-  /// Cache result time, default cache `30 days`.
+  /// Cache result time, default cache `7 days`.
   final Duration cacheDuration;
 
-  /// Body that need to be shown if something goes wrong.
+  /// Body that need to be shown if parsing fails.
   /// Deaults to `Oops! Unable to parse the url.`
   final String errorBody;
 
-  /// Image URL that will be shown if something goes wrong
+  /// Image URL that will be shown if parsing fails
   /// & when multimedia enabled & no meta data is available.
-  /// Deaults to `A semi-soccer ball image that looks like crying`.
-  /// https://github.com/ghpranav/link_preview_generator/blob/main/assets/giphy.gif?raw=true1
+  /// Deaults to `A crying semi-soccer ball image`.
+  /// https://raw.githubusercontent.com/ghpranav/link_preview_generator/main/assets/giphy.gif
   final String errorImage;
 
-  /// Title that need to be shown if something goes wrong.
+  /// Title that need to be shown if parsing fails.
   /// Deaults to `Something went wrong!`
   final String errorTitle;
 
-  /// Widget that needs to be shown if something goes wrong.
+  /// Widget that needs to be shown if parsing fails.
   /// Defaults to plain container with given background colour.
   final Widget? errorWidget;
 
@@ -70,6 +70,7 @@ class LinkPreviewGenerator extends StatefulWidget {
   final Widget? placeholderWidget;
 
   /// Proxy URL to pass that resolve CORS issues on web.
+  /// For example, `https://cors-anywhere.herokuapp.com/` .
   final String? proxyUrl;
 
   /// To remove the card elevation set it to `true`.
@@ -87,7 +88,7 @@ class LinkPreviewGenerator extends StatefulWidget {
   const LinkPreviewGenerator({
     Key? key,
     required this.link,
-    this.cacheDuration = const Duration(days: 30),
+    this.cacheDuration = const Duration(days: 7),
     this.titleStyle,
     this.bodyStyle,
     this.linkPreviewStyle = LinkPreviewStyle.large,
@@ -100,9 +101,9 @@ class LinkPreviewGenerator extends StatefulWidget {
     this.errorWidget,
     this.errorBody = 'Oops! Unable to parse the url.',
     this.errorImage =
-        'https://github.com/ghpranav/link_preview_generator/blob/main/assets/giphy.gif?raw=true',
+        'https://raw.githubusercontent.com/ghpranav/link_preview_generator/main/assets/giphy.gif',
     this.errorTitle = 'Something went wrong!',
-    this.borderRadius = 12,
+    this.borderRadius = 12.0,
     this.boxShadow,
     this.removeElevation = false,
   }) : super(key: key);
