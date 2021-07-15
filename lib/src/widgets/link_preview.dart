@@ -11,7 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 class LinkPreviewGenerator extends StatefulWidget {
   /// Customize the background colour
   /// Deaults to `Color.fromRGBO(248, 248, 248, 1.0)`.
-  final Color? backgroundColor;
+  final Color backgroundColor;
 
   /// Give the limit to body text (Description).
   /// Deaults to `3`.
@@ -26,7 +26,7 @@ class LinkPreviewGenerator extends StatefulWidget {
 
   /// BorderRadius for the card.
   /// Deafults to `12`.
-  final double? borderRadius;
+  final double borderRadius;
 
   /// Box shadow for the card.
   ///  Deafults to `[BoxShadow(
@@ -41,16 +41,17 @@ class LinkPreviewGenerator extends StatefulWidget {
 
   /// Body that need to be shown if something goes wrong.
   /// Deaults to `Oops! Unable to parse the url.`
-  final String? errorBody;
+  final String errorBody;
 
   /// Image URL that will be shown if something goes wrong
   /// & when multimedia enabled & no meta data is available.
   /// Deaults to `A semi-soccer ball image that looks like crying`.
-  final String? errorImage;
+  /// https://github.com/ghpranav/link_preview_generator/blob/main/assets/giphy.gif?raw=true1
+  final String errorImage;
 
-  /// Title that need to be shown if something goes wrong
+  /// Title that need to be shown if something goes wrong.
   /// Deaults to `Something went wrong!`
-  final String? errorTitle;
+  final String errorTitle;
 
   /// Widget that needs to be shown if something goes wrong.
   /// Defaults to plain container with given background colour.
@@ -59,14 +60,17 @@ class LinkPreviewGenerator extends StatefulWidget {
   /// Web address (URL that needs to be parsed/scrapped).
   final String link;
 
-  /// Link Preview display style. One among `large`, `small`.
-  /// Defaults to `large`.
+  /// Link Preview display style. One among `large` or `small`.
+  /// Defaults to [LinkPreviewStyle.large].
   final LinkPreviewStyle linkPreviewStyle;
 
   /// Widget that needs to be shown when
   /// package is trying to fetch metadata.
   /// If not given anything then default widget will be shown.
   final Widget? placeholderWidget;
+
+  /// Proxy URL to pass that resolve CORS issues on web.
+  final String? proxyUrl;
 
   /// To remove the card elevation set it to `true`.
   /// Defaults to `false`.
@@ -92,11 +96,13 @@ class LinkPreviewGenerator extends StatefulWidget {
     this.bodyMaxLines = 3,
     this.bodyTextOverflow = TextOverflow.ellipsis,
     this.placeholderWidget,
+    this.proxyUrl,
     this.errorWidget,
-    this.errorBody,
-    this.errorImage,
-    this.errorTitle,
-    this.borderRadius,
+    this.errorBody = 'Oops! Unable to parse the url.',
+    this.errorImage =
+        'https://github.com/ghpranav/link_preview_generator/blob/main/assets/giphy.gif?raw=true',
+    this.errorTitle = 'Something went wrong!',
+    this.borderRadius = 12,
     this.boxShadow,
     this.removeElevation = false,
   }) : super(key: key);
@@ -108,7 +114,7 @@ class LinkPreviewGenerator extends StatefulWidget {
 class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
   WebInfo? _info;
   bool _loading = false;
-  String? _errorImage, _errorTitle, _errorBody, _url;
+  late String _url;
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +130,7 @@ class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
             height: _height,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(widget.borderRadius ?? 12),
+              borderRadius: BorderRadius.circular(widget.borderRadius),
               color: const Color.fromRGBO(248, 248, 248, 1.0),
             ),
             alignment: Alignment.center,
@@ -137,31 +143,32 @@ class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
         var img = _info!.image;
         return _buildLinkContainer(
           _height,
-          title: _errorTitle,
-          desc: _errorBody,
-          image: img.trim() == '' ? _errorImage : img,
+          title: widget.errorTitle,
+          desc: widget.errorBody,
+          image: (widget.proxyUrl ?? '') +
+              (img.trim() == '' ? widget.errorImage : img),
         );
       }
     }
 
     return _info == null
         ? widget.errorWidget ??
-            _buildPlaceHolder(widget.backgroundColor!, _height)
+            _buildPlaceHolder(widget.backgroundColor, _height)
         : _buildLinkContainer(
             _height,
             domain:
                 LinkPreviewAnalyzer.isNotEmpty(info!.domain) ? info.domain : '',
             title: LinkPreviewAnalyzer.isNotEmpty(info.title)
                 ? info.title
-                : _errorTitle,
+                : widget.errorTitle,
             desc: LinkPreviewAnalyzer.isNotEmpty(info.description)
                 ? info.description
-                : _errorBody,
+                : widget.errorBody,
             image: LinkPreviewAnalyzer.isNotEmpty(info.image)
                 ? info.image
                 : LinkPreviewAnalyzer.isNotEmpty(info.icon)
                     ? info.icon
-                    : _errorImage,
+                    : widget.errorImage,
             isIcon: LinkPreviewAnalyzer.isNotEmpty(info.image) ? false : true,
           );
   }
@@ -170,12 +177,7 @@ class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
   void initState() {
     super.initState();
 
-    _errorImage = widget.errorImage ??
-        'https://github.com/ghpranav/link_preview_generator/blob/main/assets/giphy.gif?raw=true';
-    _errorTitle = widget.errorTitle ?? 'Something went wrong!';
-    _errorBody = widget.errorBody ?? 'Oops! Unable to parse the url.';
-    _url = widget.link.trim();
-
+    _url = ((widget.proxyUrl ?? '') + widget.link).trim();
     _info = LinkPreviewAnalyzer.getInfoFromCache(_url) as WebInfo?;
     if (_info == null) {
       _loading = true;
@@ -194,7 +196,7 @@ class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
     return Container(
       decoration: BoxDecoration(
         color: widget.backgroundColor,
-        borderRadius: BorderRadius.circular(widget.borderRadius ?? 12),
+        borderRadius: BorderRadius.circular(widget.borderRadius),
         boxShadow: widget.removeElevation
             ? []
             : widget.boxShadow ??
@@ -224,7 +226,7 @@ class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
               showMultiMedia: widget.showGraphic,
               isIcon: isIcon,
               bgColor: widget.backgroundColor,
-              radius: widget.borderRadius ?? 12,
+              radius: widget.borderRadius,
             )
           : LinkViewLarge(
               key: widget.key ?? Key(widget.link.toString()),
@@ -241,7 +243,7 @@ class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
               showMultiMedia: widget.showGraphic,
               isIcon: isIcon,
               bgColor: widget.backgroundColor,
-              radius: widget.borderRadius ?? 12,
+              radius: widget.borderRadius,
             ),
     );
   }
@@ -265,16 +267,16 @@ class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
   }
 
   Future<void> _getInfo() async {
-    if (_url!.startsWith('http') || _url!.startsWith('https')) {
-      _info = await LinkPreviewAnalyzer.getInfo(_url!,
+    if (_url.startsWith('http') || _url.startsWith('https')) {
+      _info = await LinkPreviewAnalyzer.getInfo(_url,
           cacheDuration: widget.cacheDuration, multimedia: true) as WebInfo?;
-      if (mounted) {
-        setState(() {
-          _loading = false;
-        });
-      }
     } else {
       print('Error: $_url is not starting with either http or https.');
+    }
+    if (mounted) {
+      setState(() {
+        _loading = false;
+      });
     }
   }
 
