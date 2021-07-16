@@ -24,7 +24,7 @@ class LinkPreview {
 
   /// Scraps the link from the given `url` to get the data for the preview.
   /// Returns the data in the form [WebInfo]
-  static Future<WebInfo> scrape(String url) async {
+  static Future<WebInfo> scrapeFromURL(String url) async {
     try {
       final response = await http.get(
         Uri.parse(url),

@@ -1,6 +1,6 @@
 # Link Preview Generator
 
-[![Pub](https://img.shields.io/pub/v/link_preview_generator)](https://pub.dartlang.org/packages/link_preview_generator)
+[![Pub](https://img.shields.io/pub/v/link_preview_generator)](https://pub.dev/packages/link_preview_generator)
 [![build](https://github.com/ghpranav/link_preview_generator/workflows/build/badge.svg)](https://github.com/ghpranav/link_preview_generator/actions?query=workflow%3Abuild)
 [![CodeFactor](https://www.codefactor.io/repository/github/ghpranav/link_preview_generator/badge)](https://www.codefactor.io/repository/github/ghpranav/link_preview_generator)
 [![License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
@@ -11,7 +11,7 @@
 </p>
 
 A cross-platform flutter package to convert your links into rich beautiful previews. <br>
-This package is inspired from [Any Link Preview](https://pub.dartlang.org/packages/any_link_preview) package, but the entire parsing & scrapping logic has been re-written to be more robust & to support more links.
+This package is inspired from [Any Link Preview](https://pub.dartlang.org/packages/any_link_preview) package, but the entire parsing & scrapping logic has been re-written to be more robust & to support more links. It also provides control over complete customization of the widget.
 
 ## Usage
 
@@ -25,6 +25,7 @@ This package is inspired from [Any Link Preview](https://pub.dartlang.org/packag
 ```dart
 import 'package:link_preview_generator/link_preview_generator.dart';
 
+/// Generate a beautiful link preview card widget
 LinkPreviewGenerator(
     bodyMaxLines: 3,
     link: 'https://github.com/ghpranav/link_preview_generator',
@@ -38,7 +39,9 @@ LinkPreviewGenerator(
 ```dart
 import 'package:link_preview_generator/link_preview_generator.dart';
 
-final WebInfo info = await LinkPreview.scrape(url);
+/// Pass the URL to be parsed/scraped
+/// to build your own custom widget with parsed data
+final WebInfo info = await LinkPreview.scrapeFromURL('https://github.com/ghpranav/link_preview_generator');
 
 /// Description of the page.
 final String description = info.description;
@@ -99,6 +102,10 @@ final String video = info.video;
 4. Push to the branch (`git push origin my-new-feature`)
 
 5. Create new Pull Request
+
+## Contributors
+
+<a href="https://github.com/ghpranav/link_preview_generator/graphs/contributors"><img src="https://contributors-img.firebaseapp.com/image?repo=ghpranav/link_preview_generator" alt="Image of contributors"></a>
 
 ## License
 
