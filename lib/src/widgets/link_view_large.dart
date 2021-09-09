@@ -14,7 +14,8 @@ class LinkViewLarge extends StatelessWidget {
   final String imageUri;
   final bool isIcon;
   final double? radius;
-  final bool? showMultiMedia;
+  final bool? showGraphic;
+  final BoxFit graphicFit;
   final String title;
   final TextStyle? titleTextStyle;
   final String url;
@@ -27,10 +28,11 @@ class LinkViewLarge extends StatelessWidget {
     required this.description,
     required this.imageUri,
     required this.onTap,
+    required this.graphicFit,
     this.titleTextStyle,
     this.bodyTextStyle,
     this.domainTextStyle,
-    this.showMultiMedia,
+    this.showGraphic,
     this.bodyTextOverflow,
     this.bodyMaxLines,
     this.isIcon = false,
@@ -67,7 +69,7 @@ class LinkViewLarge extends StatelessWidget {
           onTap: () => onTap(url),
           child: Column(
             children: <Widget>[
-              showMultiMedia!
+              showGraphic!
                   ? Expanded(
                       flex: 2,
                       child: imageUri == ''
@@ -83,8 +85,7 @@ class LinkViewLarge extends StatelessWidget {
                                       ),
                                 image: DecorationImage(
                                   image: NetworkImage(imageUri),
-                                  fit:
-                                      isIcon ? BoxFit.contain : BoxFit.fitWidth,
+                                  fit: isIcon ? BoxFit.contain : graphicFit,
                                 ),
                               ),
                             ),

@@ -81,6 +81,10 @@ class LinkPreviewGenerator extends StatefulWidget {
   /// Defaults to `true`.
   final bool showGraphic;
 
+  /// Adjust the box fit of the image.
+  /// Defaults to [BoxFit.cover].
+  final BoxFit graphicFit;
+
   /// Customize `title` [TextStyle].
   final TextStyle? titleStyle;
 
@@ -93,6 +97,7 @@ class LinkPreviewGenerator extends StatefulWidget {
     this.bodyStyle,
     this.linkPreviewStyle = LinkPreviewStyle.large,
     this.showGraphic = true,
+    this.graphicFit = BoxFit.cover,
     this.backgroundColor = const Color.fromRGBO(248, 248, 248, 1.0),
     this.bodyMaxLines = 3,
     this.bodyTextOverflow = TextOverflow.ellipsis,
@@ -224,7 +229,8 @@ class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
               bodyTextStyle: widget.bodyStyle,
               bodyTextOverflow: widget.bodyTextOverflow,
               bodyMaxLines: widget.bodyMaxLines,
-              showMultiMedia: widget.showGraphic,
+              showGraphic: widget.showGraphic,
+              graphicFit: widget.graphicFit,
               isIcon: isIcon,
               bgColor: widget.backgroundColor,
               radius: widget.borderRadius,
@@ -241,7 +247,8 @@ class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
               bodyTextStyle: widget.bodyStyle,
               bodyTextOverflow: widget.bodyTextOverflow,
               bodyMaxLines: widget.bodyMaxLines,
-              showMultiMedia: widget.showGraphic,
+              showGraphic: widget.showGraphic,
+              graphicFit: widget.graphicFit,
               isIcon: isIcon,
               bgColor: widget.backgroundColor,
               radius: widget.borderRadius,
