@@ -88,6 +88,11 @@ class LinkPreviewGenerator extends StatefulWidget {
   /// Customize `title` [TextStyle].
   final TextStyle? titleStyle;
 
+  /// Function that needs to be called when user taps on the card.
+  /// If not given then given URL will be launched.
+  /// Pass empty function to disable tap.
+  final void Function()? onTap;
+
   /// Creates [LinkPreviewGenerator]
   const LinkPreviewGenerator({
     Key? key,
@@ -101,6 +106,7 @@ class LinkPreviewGenerator extends StatefulWidget {
     this.backgroundColor = const Color.fromRGBO(248, 248, 248, 1.0),
     this.bodyMaxLines = 3,
     this.bodyTextOverflow = TextOverflow.ellipsis,
+    this.onTap,
     this.placeholderWidget,
     this.proxyUrl,
     this.errorWidget,
@@ -216,43 +222,44 @@ class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
                 ],
       ),
       height: _height,
-      child: (widget.linkPreviewStyle == LinkPreviewStyle.small)
-          ? LinkViewSmall(
-              key: widget.key ?? Key(widget.link.toString()),
-              url: widget.link,
-              domain: domain!,
-              title: title!,
-              description: desc!,
-              imageUri: image!,
-              onTap: _launchURL,
-              titleTextStyle: widget.titleStyle,
-              bodyTextStyle: widget.bodyStyle,
-              bodyTextOverflow: widget.bodyTextOverflow,
-              bodyMaxLines: widget.bodyMaxLines,
-              showGraphic: widget.showGraphic,
-              graphicFit: widget.graphicFit,
-              isIcon: isIcon,
-              bgColor: widget.backgroundColor,
-              radius: widget.borderRadius,
-            )
-          : LinkViewLarge(
-              key: widget.key ?? Key(widget.link.toString()),
-              url: widget.link,
-              domain: domain!,
-              title: title!,
-              description: desc!,
-              imageUri: image!,
-              onTap: _launchURL,
-              titleTextStyle: widget.titleStyle,
-              bodyTextStyle: widget.bodyStyle,
-              bodyTextOverflow: widget.bodyTextOverflow,
-              bodyMaxLines: widget.bodyMaxLines,
-              showGraphic: widget.showGraphic,
-              graphicFit: widget.graphicFit,
-              isIcon: isIcon,
-              bgColor: widget.backgroundColor,
-              radius: widget.borderRadius,
-            ),
+      child: InkWell(
+        onTap: widget.onTap ?? () => _launchURL(widget.link),
+        child: (widget.linkPreviewStyle == LinkPreviewStyle.small)
+            ? LinkViewSmall(
+                key: widget.key ?? Key(widget.link.toString()),
+                url: widget.link,
+                domain: domain!,
+                title: title!,
+                description: desc!,
+                imageUri: image!,
+                titleTextStyle: widget.titleStyle,
+                bodyTextStyle: widget.bodyStyle,
+                bodyTextOverflow: widget.bodyTextOverflow,
+                bodyMaxLines: widget.bodyMaxLines,
+                showGraphic: widget.showGraphic,
+                graphicFit: widget.graphicFit,
+                isIcon: isIcon,
+                bgColor: widget.backgroundColor,
+                radius: widget.borderRadius,
+              )
+            : LinkViewLarge(
+                key: widget.key ?? Key(widget.link.toString()),
+                url: widget.link,
+                domain: domain!,
+                title: title!,
+                description: desc!,
+                imageUri: image!,
+                titleTextStyle: widget.titleStyle,
+                bodyTextStyle: widget.bodyStyle,
+                bodyTextOverflow: widget.bodyTextOverflow,
+                bodyMaxLines: widget.bodyMaxLines,
+                showGraphic: widget.showGraphic,
+                graphicFit: widget.graphicFit,
+                isIcon: isIcon,
+                bgColor: widget.backgroundColor,
+                radius: widget.borderRadius,
+              ),
+      ),
     );
   }
 

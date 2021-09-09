@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 /// Large type LinkPreviewGenerator widget
 class LinkViewLarge extends StatelessWidget {
-  final Function(String) onTap;
-
   final Color? bgColor;
   final int? bodyMaxLines;
   final TextOverflow? bodyTextOverflow;
@@ -27,7 +25,6 @@ class LinkViewLarge extends StatelessWidget {
     required this.title,
     required this.description,
     required this.imageUri,
-    required this.onTap,
     required this.graphicFit,
     this.titleTextStyle,
     this.bodyTextStyle,
@@ -65,38 +62,36 @@ class LinkViewLarge extends StatelessWidget {
             fontWeight: FontWeight.w400,
           );
 
-      return InkWell(
-          onTap: () => onTap(url),
-          child: Column(
-            children: <Widget>[
-              showGraphic!
-                  ? Expanded(
-                      flex: 2,
-                      child: imageUri == ''
-                          ? Container(color: bgColor ?? Colors.grey)
-                          : Container(
-                              padding: const EdgeInsets.only(bottom: 15),
-                              decoration: BoxDecoration(
-                                borderRadius: radius == 0
-                                    ? BorderRadius.zero
-                                    : const BorderRadius.only(
-                                        topLeft: Radius.circular(12),
-                                        topRight: Radius.circular(12),
-                                      ),
-                                image: DecorationImage(
-                                  image: NetworkImage(imageUri),
-                                  fit: isIcon ? BoxFit.contain : graphicFit,
-                                ),
-                              ),
+      return Column(
+        children: <Widget>[
+          showGraphic!
+              ? Expanded(
+                  flex: 2,
+                  child: imageUri == ''
+                      ? Container(color: bgColor ?? Colors.grey)
+                      : Container(
+                          padding: const EdgeInsets.only(bottom: 15),
+                          decoration: BoxDecoration(
+                            borderRadius: radius == 0
+                                ? BorderRadius.zero
+                                : const BorderRadius.only(
+                                    topLeft: Radius.circular(12),
+                                    topRight: Radius.circular(12),
+                                  ),
+                            image: DecorationImage(
+                              image: NetworkImage(imageUri),
+                              fit: isIcon ? BoxFit.contain : graphicFit,
                             ),
-                    )
-                  : const SizedBox(height: 5),
-              _buildTitleContainer(
-                  _titleTS, computeTitleLines(layoutHeight, layoutWidth)),
-              _buildBodyContainer(
-                  _bodyTS, _domainTS, computeBodyLines(layoutHeight)),
-            ],
-          ));
+                          ),
+                        ),
+                )
+              : const SizedBox(height: 5),
+          _buildTitleContainer(
+              _titleTS, computeTitleLines(layoutHeight, layoutWidth)),
+          _buildBodyContainer(
+              _bodyTS, _domainTS, computeBodyLines(layoutHeight)),
+        ],
+      );
     });
   }
 

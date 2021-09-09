@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 /// Small type LinkPreviewGenerator widget
 class LinkViewSmall extends StatelessWidget {
-  final Function(String) onTap;
-
   final Color? bgColor;
   final int? bodyMaxLines;
   final TextOverflow? bodyTextOverflow;
@@ -27,7 +25,6 @@ class LinkViewSmall extends StatelessWidget {
     required this.title,
     required this.description,
     required this.imageUri,
-    required this.onTap,
     required this.graphicFit,
     this.titleTextStyle,
     this.bodyTextStyle,
@@ -66,49 +63,46 @@ class LinkViewSmall extends StatelessWidget {
               fontWeight: FontWeight.w400,
             );
 
-        return InkWell(
-          onTap: () => onTap(url),
-          child: Row(
-            children: <Widget>[
-              showGraphic!
-                  ? Expanded(
-                      flex: 2,
-                      child: imageUri == ''
-                          ? Container(color: bgColor ?? Colors.grey)
-                          : Container(
-                              margin: const EdgeInsets.only(right: 5),
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: NetworkImage(imageUri),
-                                  fit: isIcon ? BoxFit.contain : graphicFit,
-                                ),
-                                borderRadius: radius == 0
-                                    ? BorderRadius.zero
-                                    : BorderRadius.only(
-                                        topLeft: Radius.circular(radius!),
-                                        bottomLeft: Radius.circular(radius!),
-                                      ),
+        return Row(
+          children: <Widget>[
+            showGraphic!
+                ? Expanded(
+                    flex: 2,
+                    child: imageUri == ''
+                        ? Container(color: bgColor ?? Colors.grey)
+                        : Container(
+                            margin: const EdgeInsets.only(right: 5),
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: NetworkImage(imageUri),
+                                fit: isIcon ? BoxFit.contain : graphicFit,
                               ),
+                              borderRadius: radius == 0
+                                  ? BorderRadius.zero
+                                  : BorderRadius.only(
+                                      topLeft: Radius.circular(radius!),
+                                      bottomLeft: Radius.circular(radius!),
+                                    ),
                             ),
-                    )
-                  : const SizedBox(width: 5),
-              Expanded(
-                flex: 4,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 3),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      _buildTitleContainer(
-                          _titleFontSize, computeTitleLines(layoutHeight)),
-                      _buildBodyContainer(_bodyFontSize, _domainTS,
-                          computeBodyLines(layoutHeight))
-                    ],
-                  ),
+                          ),
+                  )
+                : const SizedBox(width: 5),
+            Expanded(
+              flex: 4,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 3),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    _buildTitleContainer(
+                        _titleFontSize, computeTitleLines(layoutHeight)),
+                    _buildBodyContainer(_bodyFontSize, _domainTS,
+                        computeBodyLines(layoutHeight))
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );
