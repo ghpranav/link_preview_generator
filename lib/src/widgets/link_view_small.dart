@@ -12,7 +12,10 @@ class LinkViewSmall extends StatelessWidget {
   final String imageUri;
   final bool isIcon;
   final double? radius;
-  final bool? showGraphic;
+  final bool showBody;
+  final bool showDomain;
+  final bool showGraphic;
+  final bool showTitle;
   final BoxFit graphicFit;
   final String title;
   final TextStyle? titleTextStyle;
@@ -26,10 +29,13 @@ class LinkViewSmall extends StatelessWidget {
     required this.description,
     required this.imageUri,
     required this.graphicFit,
+    required this.showBody,
+    required this.showDomain,
+    required this.showGraphic,
+    required this.showTitle,
     this.titleTextStyle,
     this.bodyTextStyle,
     this.domainTextStyle,
-    this.showGraphic,
     this.bodyTextOverflow,
     this.bodyMaxLines,
     this.isIcon = false,
@@ -65,7 +71,7 @@ class LinkViewSmall extends StatelessWidget {
 
         return Row(
           children: <Widget>[
-            showGraphic!
+            showGraphic
                 ? Expanded(
                     flex: 2,
                     child: imageUri == ''
@@ -94,10 +100,14 @@ class LinkViewSmall extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    _buildTitleContainer(
-                        _titleFontSize, computeTitleLines(layoutHeight)),
-                    _buildBodyContainer(_bodyFontSize, _domainTS,
-                        computeBodyLines(layoutHeight))
+                    showTitle
+                        ? _buildTitleContainer(
+                            _titleFontSize, computeTitleLines(layoutHeight))
+                        : const SizedBox(),
+                    showBody
+                        ? _buildBodyContainer(_bodyFontSize, _domainTS,
+                            computeBodyLines(layoutHeight))
+                        : const SizedBox(),
                   ],
                 ),
               ),
@@ -113,6 +123,7 @@ class LinkViewSmall extends StatelessWidget {
     if (layoutHeight > 60) {
       lines += (layoutHeight - 60.0) ~/ 30.0 as int;
     }
+    lines += (showDomain ? 0 : 1) + (showTitle ? 0 : 1);
     return lines;
   }
 
@@ -136,19 +147,21 @@ class LinkViewSmall extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(5, 3, 5, 0),
         child: Column(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(bottom: 6),
-              child: Align(
-                alignment: const Alignment(-1.0, -1.0),
-                child: Text(
-                  domain,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.left,
-                  style: _domainTS,
-                ),
-              ),
-            ),
+            showDomain
+                ? Padding(
+                    padding: const EdgeInsets.only(bottom: 6),
+                    child: Align(
+                      alignment: const Alignment(-1.0, -1.0),
+                      child: Text(
+                        domain,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.left,
+                        style: _domainTS,
+                      ),
+                    ),
+                  )
+                : const SizedBox(),
             Expanded(
               child: Container(
                 alignment: const Alignment(-1.0, -1.0),

@@ -77,9 +77,21 @@ class LinkPreviewGenerator extends StatefulWidget {
   /// Defaults to `false`.
   final bool removeElevation;
 
+  /// Show or Hide body text (Description).
+  /// Defaults to `true`.
+  final bool showBody;
+
+  /// Show or Hide domain name.
+  /// Defaults to `true`.
+  final bool showDomain;
+
   /// Show or Hide image, if available.
   /// Defaults to `true`.
   final bool showGraphic;
+
+  /// Show or Hide title.
+  /// Defaults to `true`.
+  final bool showTitle;
 
   /// Adjust the box fit of the image.
   /// Defaults to [BoxFit.cover].
@@ -101,7 +113,10 @@ class LinkPreviewGenerator extends StatefulWidget {
     this.titleStyle,
     this.bodyStyle,
     this.linkPreviewStyle = LinkPreviewStyle.large,
+    this.showBody = true,
+    this.showDomain = true,
     this.showGraphic = true,
+    this.showTitle = true,
     this.graphicFit = BoxFit.cover,
     this.backgroundColor = const Color.fromRGBO(248, 248, 248, 1.0),
     this.bodyMaxLines,
@@ -236,7 +251,10 @@ class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
                 bodyTextStyle: widget.bodyStyle,
                 bodyTextOverflow: widget.bodyTextOverflow,
                 bodyMaxLines: widget.bodyMaxLines,
+                showBody: widget.showBody,
+                showDomain: widget.showDomain,
                 showGraphic: widget.showGraphic,
+                showTitle: widget.showTitle,
                 graphicFit: widget.graphicFit,
                 isIcon: isIcon,
                 bgColor: widget.backgroundColor,
@@ -253,7 +271,10 @@ class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
                 bodyTextStyle: widget.bodyStyle,
                 bodyTextOverflow: widget.bodyTextOverflow,
                 bodyMaxLines: widget.bodyMaxLines,
+                showBody: widget.showBody,
+                showDomain: widget.showDomain,
                 showGraphic: widget.showGraphic,
+                showTitle: widget.showTitle,
                 graphicFit: widget.graphicFit,
                 isIcon: isIcon,
                 bgColor: widget.backgroundColor,

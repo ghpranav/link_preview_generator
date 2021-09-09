@@ -12,7 +12,10 @@ class LinkViewLarge extends StatelessWidget {
   final String imageUri;
   final bool isIcon;
   final double? radius;
-  final bool? showGraphic;
+  final bool showBody;
+  final bool showDomain;
+  final bool showGraphic;
+  final bool showTitle;
   final BoxFit graphicFit;
   final String title;
   final TextStyle? titleTextStyle;
@@ -26,10 +29,13 @@ class LinkViewLarge extends StatelessWidget {
     required this.description,
     required this.imageUri,
     required this.graphicFit,
+    required this.showBody,
+    required this.showDomain,
+    required this.showGraphic,
+    required this.showTitle,
     this.titleTextStyle,
     this.bodyTextStyle,
     this.domainTextStyle,
-    this.showGraphic,
     this.bodyTextOverflow,
     this.bodyMaxLines,
     this.isIcon = false,
@@ -65,7 +71,7 @@ class LinkViewLarge extends StatelessWidget {
 
         return Column(
           children: <Widget>[
-            showGraphic!
+            showGraphic
                 ? Expanded(
                     flex: 3,
                     child: imageUri == ''
@@ -87,10 +93,14 @@ class LinkViewLarge extends StatelessWidget {
                           ),
                   )
                 : const SizedBox(height: 5),
-            _buildTitleContainer(
-                _titleTS, computeTitleLines(layoutHeight, layoutWidth)),
-            _buildBodyContainer(
-                _bodyTS, _domainTS, computeBodyLines(layoutHeight)),
+            showTitle
+                ? _buildTitleContainer(
+                    _titleTS, computeTitleLines(layoutHeight, layoutWidth))
+                : const SizedBox(),
+            showBody
+                ? _buildBodyContainer(
+                    _bodyTS, _domainTS, computeBodyLines(layoutHeight))
+                : const SizedBox(),
           ],
         );
       },
@@ -98,7 +108,9 @@ class LinkViewLarge extends StatelessWidget {
   }
 
   int? computeBodyLines(layoutHeight) {
-    return layoutHeight ~/ 90 == 0 ? 1 : layoutHeight ~/ 90;
+    var lines = layoutHeight ~/ 90 == 0 ? 1 : layoutHeight ~/ 90;
+    lines += showDomain ? 0 : 1;
+    return lines;
   }
 
   double computeTitleFontSize(double height) {
@@ -121,19 +133,21 @@ class LinkViewLarge extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(10, 0, 5, 5),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 6),
-              child: Align(
-                alignment: const Alignment(-1.0, -1.0),
-                child: Text(
-                  domain,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.left,
-                  style: _domainTS,
-                ),
-              ),
-            ),
+            showDomain
+                ? Padding(
+                    padding: const EdgeInsets.only(bottom: 6),
+                    child: Align(
+                      alignment: const Alignment(-1.0, -1.0),
+                      child: Text(
+                        domain,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.left,
+                        style: _domainTS,
+                      ),
+                    ),
+                  )
+                : const SizedBox(),
             Expanded(
               child: Container(
                 alignment: const Alignment(-1.0, -1.0),
