@@ -4,7 +4,7 @@
 [![build](https://github.com/ghpranav/link_preview_generator/workflows/build/badge.svg)](https://github.com/ghpranav/link_preview_generator/actions?query=workflow%3Abuild)
 [![CodeFactor](https://www.codefactor.io/repository/github/ghpranav/link_preview_generator/badge)](https://www.codefactor.io/repository/github/ghpranav/link_preview_generator)
 [![License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
-[![Donate](https://img.shields.io/badge/Donate-UPI-green.svg)](https://upayi.me/bedrepranav@okhdfcbank)
+[![Donate](https://img.shields.io/badge/Donate-UPI-green.svg)](https://upayi.ml/bedrepranav@okhdfcbank)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/ghpranav/link_preview_generator/main/assets/header.png" width="480">
@@ -90,7 +90,10 @@ final String video = info.video;
 | **placeholderWidget** | Widget shown when parsing the link                          | Widget            |                                                                                                                                     | `false`  |
 | **proxyUrl**          | Proxy URL to pass that resolve CORS issues on web           | String            | example(`https://cors-anywhere.herokuapp.com/`)                                                                                     | `false`  |
 | **removeElevation**   | To remove the widget card elevation                         | bool              | default(`false`) `true`,`false`                                                                                                     | `false`  |
+| **showBody**          | Show or Hide body text (Description)                        | bool              | default(`true`) `true`,`false`                                                                                                      | `false`  |
+| **showDomain**        | Show or Hide domain name                                    | bool              | default(`true`) `true`,`false`                                                                                                      | `false`  |
 | **showGraphic**       | Show or Hide the image after parsing, if available          | bool              | default(`true`) `true`,`false`                                                                                                      | `false`  |
+| **showTitle**         | Show or Hide title                                          | bool              | default(`true`) `true`,`false`                                                                                                      | `false`  |
 | **titleStyle**        | Customize the title style                                   | TextStyle         | N.A                                                                                                                                 | `false`  |
 
 ## Contributing
