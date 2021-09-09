@@ -14,8 +14,8 @@ class LinkPreviewGenerator extends StatefulWidget {
   final Color backgroundColor;
 
   /// Give the limit to body text (Description).
-  /// Deaults to `3`.
-  final int bodyMaxLines;
+  /// If not provided, it will be calculated automatically.
+  final int? bodyMaxLines;
 
   /// Customize `body` [TextStyle].
   final TextStyle? bodyStyle;
@@ -104,7 +104,7 @@ class LinkPreviewGenerator extends StatefulWidget {
     this.showGraphic = true,
     this.graphicFit = BoxFit.cover,
     this.backgroundColor = const Color.fromRGBO(248, 248, 248, 1.0),
-    this.bodyMaxLines = 3,
+    this.bodyMaxLines,
     this.bodyTextOverflow = TextOverflow.ellipsis,
     this.onTap,
     this.placeholderWidget,
@@ -133,8 +133,8 @@ class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
     final info = _info;
     var _height = (widget.linkPreviewStyle == LinkPreviewStyle.small ||
             !widget.showGraphic)
-        ? ((MediaQuery.of(context).size.height) * 0.15)
-        : ((MediaQuery.of(context).size.height) * 0.30);
+        ? MediaQuery.of(context).size.height * 0.15
+        : MediaQuery.of(context).size.height * 0.30;
 
     if (_loading) {
       return widget.placeholderWidget ??

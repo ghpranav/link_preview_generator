@@ -98,7 +98,7 @@ class LinkViewLarge extends StatelessWidget {
   }
 
   int? computeBodyLines(layoutHeight) {
-    return layoutHeight ~/ 60 == 0 ? 1 : layoutHeight ~/ 60;
+    return layoutHeight ~/ 90 == 0 ? 1 : layoutHeight ~/ 90;
   }
 
   double computeTitleFontSize(double height) {
@@ -141,8 +141,7 @@ class LinkViewLarge extends StatelessWidget {
                   description,
                   style: _bodyTS,
                   overflow: bodyTextOverflow ?? TextOverflow.ellipsis,
-                  maxLines:
-                      bodyMaxLines == null ? _maxLines : bodyMaxLines! - 1,
+                  maxLines: bodyMaxLines ?? _maxLines,
                 ),
               ),
             ),

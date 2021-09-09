@@ -110,8 +110,8 @@ class LinkViewSmall extends StatelessWidget {
 
   int computeBodyLines(layoutHeight) {
     var lines = 1;
-    if (layoutHeight > 40) {
-      lines += (layoutHeight - 40.0) ~/ 15.0 as int;
+    if (layoutHeight > 60) {
+      lines += (layoutHeight - 60.0) ~/ 30.0 as int;
     }
     return lines;
   }
