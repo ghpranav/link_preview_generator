@@ -134,7 +134,7 @@ class _LinkPreviewGeneratorState extends State<LinkPreviewGenerator> {
     var _height = (widget.linkPreviewStyle == LinkPreviewStyle.small ||
             !widget.showGraphic)
         ? ((MediaQuery.of(context).size.height) * 0.15)
-        : ((MediaQuery.of(context).size.height) * 0.25);
+        : ((MediaQuery.of(context).size.height) * 0.30);
 
     if (_loading) {
       return widget.placeholderWidget ??

@@ -39,60 +39,62 @@ class LinkViewLarge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      var layoutWidth = constraints.biggest.width;
-      var layoutHeight = constraints.biggest.height;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        var layoutWidth = constraints.biggest.width;
+        var layoutHeight = constraints.biggest.height;
 
-      var _titleTS = titleTextStyle ??
-          TextStyle(
-            fontSize: computeTitleFontSize(layoutHeight),
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          );
-      var _bodyTS = bodyTextStyle ??
-          TextStyle(
-            fontSize: computeTitleFontSize(layoutHeight) - 1,
-            color: Colors.grey,
-            fontWeight: FontWeight.w400,
-          );
-      var _domainTS = bodyTextStyle ??
-          TextStyle(
-            fontSize: computeTitleFontSize(layoutHeight) - 1,
-            color: Colors.blue,
-            fontWeight: FontWeight.w400,
-          );
+        var _titleTS = titleTextStyle ??
+            TextStyle(
+              fontSize: computeTitleFontSize(layoutHeight),
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            );
+        var _bodyTS = bodyTextStyle ??
+            TextStyle(
+              fontSize: computeTitleFontSize(layoutHeight) - 1,
+              color: Colors.grey,
+              fontWeight: FontWeight.w400,
+            );
+        var _domainTS = bodyTextStyle ??
+            TextStyle(
+              fontSize: computeTitleFontSize(layoutHeight) - 1,
+              color: Colors.blue,
+              fontWeight: FontWeight.w400,
+            );
 
-      return Column(
-        children: <Widget>[
-          showGraphic!
-              ? Expanded(
-                  flex: 2,
-                  child: imageUri == ''
-                      ? Container(color: bgColor ?? Colors.grey)
-                      : Container(
-                          padding: const EdgeInsets.only(bottom: 15),
-                          decoration: BoxDecoration(
-                            borderRadius: radius == 0
-                                ? BorderRadius.zero
-                                : const BorderRadius.only(
-                                    topLeft: Radius.circular(12),
-                                    topRight: Radius.circular(12),
-                                  ),
-                            image: DecorationImage(
-                              image: NetworkImage(imageUri),
-                              fit: isIcon ? BoxFit.contain : graphicFit,
+        return Column(
+          children: <Widget>[
+            showGraphic!
+                ? Expanded(
+                    flex: 3,
+                    child: imageUri == ''
+                        ? Container(color: bgColor ?? Colors.grey)
+                        : Container(
+                            padding: const EdgeInsets.only(bottom: 15),
+                            decoration: BoxDecoration(
+                              borderRadius: radius == 0
+                                  ? BorderRadius.zero
+                                  : const BorderRadius.only(
+                                      topLeft: Radius.circular(12),
+                                      topRight: Radius.circular(12),
+                                    ),
+                              image: DecorationImage(
+                                image: NetworkImage(imageUri),
+                                fit: isIcon ? BoxFit.contain : graphicFit,
+                              ),
                             ),
                           ),
-                        ),
-                )
-              : const SizedBox(height: 5),
-          _buildTitleContainer(
-              _titleTS, computeTitleLines(layoutHeight, layoutWidth)),
-          _buildBodyContainer(
-              _bodyTS, _domainTS, computeBodyLines(layoutHeight)),
-        ],
-      );
-    });
+                  )
+                : const SizedBox(height: 5),
+            _buildTitleContainer(
+                _titleTS, computeTitleLines(layoutHeight, layoutWidth)),
+            _buildBodyContainer(
+                _bodyTS, _domainTS, computeBodyLines(layoutHeight)),
+          ],
+        );
+      },
+    );
   }
 
   int? computeBodyLines(layoutHeight) {
