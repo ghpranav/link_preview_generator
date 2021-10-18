@@ -1,3 +1,7 @@
+## 1.2.0
+
+- Bump minimum Flutter version.
+
 ## 1.1.0
 
 - Added more customization properties - graphicFit, onTap, showBody, showDomain, showTitle.
