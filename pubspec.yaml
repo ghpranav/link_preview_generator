@@ -5,17 +5,17 @@ homepage: https://github.com/ghpranav/
 repository: https://github.com/ghpranav/link_preview_generator
 
 environment:
-  sdk: ">=2.14.0 <3.0.0"
+  sdk: ">=2.16.2 <3.0.0"
   flutter: ">=2.5.0"
 
 dependencies:
   flutter:
     sdk: flutter
   collection: ^1.15.0
-  http: ^0.13.4
+  http: ^1.2.0
   path: ^1.8.0
-  universal_html: ^2.0.8
-  url_launcher: ^6.0.12
+  universal_html: ^2.2.4
+  url_launcher: ^6.2.3
 
 dev_dependencies:
   flutter_test:
